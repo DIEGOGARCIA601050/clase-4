@@ -1,0 +1,41 @@
+{
+  "name": "cursonode",
+  "version": "1.0.0",
+  "description": "nodejsapi",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev1": "nodemon ./http.js",
+    "dev2": "nodemon ./routing.js",
+    "dev3": "nodemon ./express.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DIEGOGARCIA601050/cursoNode.git"
+  },
+  "keywords": [
+    "curso",
+    "node",
+    "api",
+    "express"
+  ],
+  "author": "Diego Garcia",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DIEGOGARCIA601050/cursoNode/issues"
+  },
+  "homepage": "https://github.com/DIEGOGARCIA601050/cursoNode#readme",
+  "dependencies": {
+    "cors": "2.8.5",
+    "express": "4.18.2",
+    "nodemon": "^3.0.1",
+    "zod": "3.22.4"
+  },
+  "devDependencies": {
+    "standard": "^17.1.0"
+  },
+  "eslintConfig": {
+    "extends": "standard"
+  }
+}
