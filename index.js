@@ -1,33 +1,19 @@
 import express from 'express'
-import cors from 'cors'
 
-import { ValidateMovie, validateParcialMovie } from './schemas/schemaMovie.js'
+import { Cors } from './middlewares/cors.js'
+import { Require } from './Require.js'
+import { MovieModel } from './models/movie.js'
+
 import { randomUUID } from 'node:crypto'
-import { createRequire } from 'node:module'
 
-export const require = createRequire(import.meta.url)
-const movies = require('./pokemon/movies.json')
+const movies = Require('./pokemon/movies.json')
 const app = express()
 const port = 3000
 
 app.disable('x-powered-by')
 
 app.use(express.json())
-app.use(cors({
-  origin: (origin, callback) => {
-    const AceptedOrigins = [
-      '*',
-      'dominio.example'
-    ]
-    if (AceptedOrigins.includes(origin)) {
-      return callback(null, true)
-    }
-    if (!origin) {
-      return callback(null, true)
-    }
-    return callback(new Error('No hay cors'))
-  }
-}))
+app.use(Cors())
 
 { // { /* app.use((req, res, next) => {
 //   if (req !== 'POST') return next()
@@ -54,41 +40,26 @@ app.get('/', (req, res) => {
 })
 
 app.get('/movies', (req, res) => {
-  res.jsonp(movies)
+  res.json(movies)
 })
 
-app.get('/movies/filter', (req, res) => {
-  const { genre, title, director } = req.query
-  if (genre) {
-    res.status(302).json(movies.filter(movie => movie.genre.some(g => g.toLowerCase() === genre.toLowerCase())))
-  }
-  if (title) {
-    res.status(302).json(movies.filter(movie => movie.title === title))
-  }
-  if (director) {
-    res.status(302).json(movies.filter(movie => movie.director === director))
-  }
+app.get('/movies/filter', async (req, res) => {
+  const { genre, title, director, year, poster, rate } = req.query
+  
+  const movies = await MovieModel.getAll({title, director, year, rate, genre, poster})
 }
 )
 
 app.get('/movies/:id', (req, res) => {
   const { id } = req.params
-  const foundMovie = movies.find(movie => movie.id === id)
+  const foundMovie = MovieModel.getByID(id)
   if (foundMovie) { res.status(302).send(foundMovie) } else { res.status(400).send('id no valida') }
 })
 
 app.post('/movies', (req, res) => {
   const data = req.body
-
-  const Vali = ValidateMovie(data)
-  if (Vali.success) {
-    // 422 Unprocesable Entity
-    // en base de datos
-    const NewMovie = {
-      id: randomUUID(),
-      ...data
-    }
-    movies.push(NewMovie)
+  const NewMovie = MovieModel.add(data)
+  if(NewMovie){
     // req.body deberíamos guardar en bbdd
     res.status(201).json(NewMovie)
   } else {
