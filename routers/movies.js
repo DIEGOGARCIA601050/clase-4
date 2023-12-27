@@ -1,10 +1,10 @@
 import { Router } from "express";
 
-import { require } from "../express";
+import { Require } from "../Require.js";
 
-const movies = require('../pokemon/movies.json')
+const movies = Require('../pokemon/movies.json')
 const router = Router();
 
-router.get("/m", (req, res) => {
+router.get("/", (req, res) => {
     res.json(movies);
 });

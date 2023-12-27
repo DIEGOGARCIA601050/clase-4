@@ -3,10 +3,10 @@ import cors from 'cors'
 
 import { ValidateMovie, validateParcialMovie } from './schemas/schemaMovie.js'
 import { randomUUID } from 'node:crypto'
-import { createRequire } from 'node:module'
+import { Require } from './Require.js'
+import { MovieModel } from './models/movie.js'
 
-export const require = createRequire(import.meta.url)
-const movies = require('./pokemon/movies.json')
+const movies = Require('./pokemon/movies.json')
 const app = express()
 const port = 3000
 
@@ -29,7 +29,7 @@ app.use(cors({
   }
 }))
 
-{ // { /* app.use((req, res, next) => {
+/* app.use((req, res, next) => {
 //   if (req !== 'POST') return next()
 //   if (req.headers['content-type'] !== 'application/json') return next()
 //   let body = ''
@@ -46,15 +46,14 @@ app.use(cors({
 // guardar req en DB
 // isUserLoged()
 // Cookies
-// })*/}
-}
+// })*/
 
 app.get('/', (req, res) => {
   res.send('<h1>Pagina Principal</h1>')
 })
 
 app.get('/movies', (req, res) => {
-  res.jsonp(movies)
+  res.json(movies)
 })
 
 app.get('/movies/filter', (req, res) => {
@@ -71,11 +70,17 @@ app.get('/movies/filter', (req, res) => {
 }
 )
 
-app.get('/movies/:id', (req, res) => {
+app.get('/movies/:id', async (req, res) => {
   const { id } = req.params
-  const foundMovie = movies.find(movie => movie.id === id)
-  if (foundMovie) { res.status(302).send(foundMovie) } else { res.status(400).send('id no valida') }
-})
+  const foundMovie = await MovieModel.getByID(id)
+try {
+  const movie = await foundMovie;
+  res.status(302).json(movie);
+} catch (error) {
+  console.error('Error finding movie:', error);
+  res.status(400).send('id no valida');
+}})
+
 
 app.post('/movies', (req, res) => {
   const data = req.body
@@ -116,11 +121,7 @@ app.patch('/movies/:id', (req, res) => {
 
 app.delete('/movies/:id', (req, res) => {
   const { id } = req.params
-  const movieIndex = movies.findIndex(movie => movie.id === id)
-  if (movieIndex > 0) {
-    movies.splice(movieIndex, 1)
-    res.send(movies)
-  }
+  const filtredMovies = M
 })
 
 // la última a la que va a llegar

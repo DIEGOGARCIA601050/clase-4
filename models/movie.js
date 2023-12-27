@@ -1,12 +1,14 @@
-import Require from '../Require.js';
-import { ValidateMovie } from './schemas/schemaMovie.js'
-const movies = Require('../pokemon/movies.js');
+import { createRequire } from 'node:module'
+const Require = createRequire(import.meta.url)
+const movies = Require('../pokemon/movies.json');
 export class MovieModel {
-  static getAll = async ({title, director, year, rating, genres, poster}) => {
-    if (genres) {
+  static getByGender = async (request) => {
+    const {title, year, director, poster, genre, rate} = request.body;
+    
+    if (genre) {
       return movies.filter(
         movie => {
-          movie.some(genre => genre.toLowerCase() === movie.genres.toLowerCase())
+          movie.some(genre => genre.toLowerCase() === movie.genre.toLowerCase())
         })}
       if (title) {
         return movies.filter(movie => movie.title.toLowerCase() === title.toLowerCase())
@@ -17,28 +19,16 @@ export class MovieModel {
       if (year) {
         return movies.filter(movie => movie.year === year)
       }
-      if(rating) {
+      if(rate) {
         return movies.filter(movie => movie.rating === rating)
       }
       if(poster) {
         return movies.filter(movie => movie.poster === poster)
       }
     }
-  static getByID = async ({id}) => {
-    movies = movies.filter(movie => movie.id === id)
-    return movies
-  }
-  static add = async (datos) => {
-    const Vali = ValidateMovie(datos)
-    if (Vali.success) {
-      // 422 Unprocesable Entity
-      // en base de datos
-      const NewMovie = {
-        id: randomUUID(),
-        ...datos
-      }
-      movies.push(NewMovie)
-      return NewMovie
+  static getByID = async (id) => {
+    const foundMovie = movies.find(movie => movie.id === id)
+      if (Object.keys(foundMovie).length === 0) { return false } else { return foundMovie }
     }
   }
-  }
+  
