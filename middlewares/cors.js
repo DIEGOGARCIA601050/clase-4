@@ -4,7 +4,7 @@ const AceptedOrigins = [
   '*',
   'dominio.example'
 ]
-export const Cors = ({acceptedOrigins = AceptedOrigins} = {}) => {cors({
+export const Cors = ({acceptedOrigins = AceptedOrigins} = {}) => cors({
     origin: (origin, callback) => {
       if (acceptedOrigins.includes(origin)) {
         return callback(null, true)
@@ -14,4 +14,4 @@ export const Cors = ({acceptedOrigins = AceptedOrigins} = {}) => {cors({
       }
       return callback(new Error('No hay cors'))
     }
-  })}
+  })

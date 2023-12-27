@@ -1,5 +1,5 @@
 import Require from '../Require.js';
-import { ValidateMovie, validateParcialMovie } from './schemas/schemaMovie.js'
+import { ValidateMovie } from './schemas/schemaMovie.js'
 const movies = Require('../pokemon/movies.js');
 export class MovieModel {
   static getAll = async ({title, director, year, rating, genres, poster}) => {

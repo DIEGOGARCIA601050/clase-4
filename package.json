@@ -5,8 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon ./express.js",
-    "start": "node ./express.js",
+    "start": "nodemon ./express.js",
+    "dev": "node ./express.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
