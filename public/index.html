@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catalogo</title>
+  <style>
+    article {
+      border: 1px solid #ccc;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    img {
+      height: auto;
+      width: 320px;
+      max-width: 100%;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      padding: 1rem;
+    }
+
+    main {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+    }
+
+    h2 {
+      font-size: 2.5rem;
+    }
+
+    p {
+      color: #180909;
+    }
+
+    button {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      transition-duration: 0.4s;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: white; 
+      color: black; 
+      border: 2px solid #007BFF;
+    }
+
+  </style>
+  <script type="module">
+    fetch('https://clase-4.chetoel.repl.co/movies')
+      .then(res => res.json())
+      .then(movies => {
+        const html = movies.map(movie => {
+          return `
+            <article data-id="${movie.id}">
+              <h2>${movie.title}</h2>
+              <img src="${movie.poster}" alt="${movie.title}">
+              <p>Año de Estreno: ${movie.year}</p>
+              <p>calificación: ${movie.rate}</p>
+
+              <button>Eliminar</button>
+            </article>
+          `
+        }).join('')
+
+        document.querySelector('main').innerHTML = html
+
+        document.addEventListener('click', e => {
+          if (e.target.matches('button')) {
+            const article = e.target.closest('article')
+            const id = article.dataset.id
+
+            fetch(`https://clase-4.chetoel.repl.co/movies/${id}`, {
+              method: 'DELETE'
+            })
+              .then(res => {
+                if (res.ok) {
+                  article.remove()
+                }
+              })
+            }
+
+        })
+      })
+  </script>
+</head>
+<body>
+  <main></main>
+</body>
+</html>
