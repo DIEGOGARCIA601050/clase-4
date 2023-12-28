@@ -32,10 +32,41 @@ app.use('/movies', moviesRouter)
 // })*/
 
 app.get('/', (req, res) => {
-  res.send(`<h1>Bienvenido</h1>
+  res.send(`<html><head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f0f0;
+    }
+
+    h1 {
+      color: #333;
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    p {
+      color: #666;
+      margin: 20px;
+    }
+
+    a {
+      margin: 10px 20px;
+      color: #0088cc;
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: #005599;
+    }
+
+  </style>
+  </head><body><h1>Bienvenido</h1>
   <p>Esta es la api de movies</p>
   <a href="/movies/Catalogo">Consulta las peliculas</a>
-  <a href="/movies">API info</a`)
+  <a href="/movies">API info</a></body></html>`)
 })
 
 // la última a la que va a llegar

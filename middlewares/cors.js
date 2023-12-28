@@ -11,7 +11,8 @@ const ACCEPTED_ORIGINS = [
   'http://34.139.212.28:8080',
   'http://34.139.212.28:3000',
   'http://localhost:3000',
-  'https://clase-4.chetoel.repl.co'
+  'https://clase-4.chetoel.repl.co',
+  'https://clase-4--chetoel.repl.co'
 ]
 
 export const corsMiddleware = ({ acceptedOrigins = ACCEPTED_ORIGINS } = {}) => cors({

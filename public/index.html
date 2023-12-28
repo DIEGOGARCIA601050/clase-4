@@ -15,6 +15,9 @@
       height: auto;
       width: 320px;
       max-width: 100%;
+      display: flex;
+      align-content: center;
+      margin: 0 auto 5px;
     }
     body {
       font-family: Arial, sans-serif;
@@ -30,6 +33,10 @@
 
     h2 {
       font-size: 2.5rem;
+      text-align: center;
+    }
+    div {
+      text-align: center;
     }
 
     p {
@@ -66,10 +73,14 @@
             <article data-id="${movie.id}">
               <h2>${movie.title}</h2>
               <img src="${movie.poster}" alt="${movie.title}">
-              <p>Año de Estreno: ${movie.year}</p>
-              <p>calificación: ${movie.rate}</p>
+              <div>
+                <p>Director: ${movie.director} </p> 
+                <p>Año de Estreno: ${movie.year} </p> 
+                <p>calificación: ${movie.rate} </p> 
 
-              <button>Eliminar</button>
+                <button>Eliminar</button>
+              </div>
+              
             </article>
           `
         }).join('')
