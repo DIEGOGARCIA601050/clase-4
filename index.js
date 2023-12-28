@@ -56,9 +56,8 @@ app.get('/movies', (req, res) => {
   res.json(movies)
 })
 
-app.get('/movies/filter', (req, res) => {
-  const { genre, title, director } = req.query
-  if (genre) {
+app.get('/movies/filter', async (req, res) => {
+  /*if (genre) {
     res.status(302).json(movies.filter(movie => movie.genre.some(g => g.toLowerCase() === genre.toLowerCase())))
   }
   if (title) {
@@ -66,9 +65,15 @@ app.get('/movies/filter', (req, res) => {
   }
   if (director) {
     res.status(302).json(movies.filter(movie => movie.director === director))
+  }*/
+  try {
+    const movie = await MovieModel.getByGender(req);
+    res.status(302).json(movie);
+  } catch (error) {
+    console.error('Error finding movie:', error);
+    res.status(400).send(`Error al buscar el libro: ${error.message}`);
   }
-}
-)
+})
 
 app.get('/movies/:id', async (req, res) => {
   const { id } = req.params
