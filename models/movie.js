@@ -4,7 +4,8 @@ import { ValidateMovie, validateParcialMovie } from '../schemas/schemaMovie.js'
 const Require = createRequire(import.meta.url)
 const movies = Require('../pokemon/movies.json');
 export class MovieModel {
-  static getByGender = async (request) => {
+  static getAll = async () => movies
+  static getByGender = async ({ request }) => {
     const { title, year, director, poster, genre, rate } = request.query;
 
     let filteredMovies = movies;
@@ -31,11 +32,11 @@ export class MovieModel {
     return filteredMovies;
   }
 
-  static getByID = async (id) => {
+  static getByID = async ({ id }) => {
     const foundMovie = movies.find(movie => movie.id === id)
       if (Object.keys(foundMovie).length === 0) { return false } else { return foundMovie }
     }
-  static create = async (request) => {
+  static create = async ({ request }) => {
     const data = request.body;
     const Valider = ValidateMovie(data)
     if(!Valider) {
@@ -48,11 +49,11 @@ export class MovieModel {
     movies.push(NewMovie)
     return NewMovie
   }
-  static update = async (id, request) => {
+  static update = async ({ id, request }) => {
     const { title, year, director, genre, rate } = request.body;
     const foundMovie = movies.find(movie => movie.id === id)
     if (!foundMovie) { return false }
-    const Valider = validateParcialMovie(data)
+    const Valider = validateParcialMovie(request.body)
     if (!Valider.success) { return false }
     if(title) {
       foundMovie.title = title
@@ -70,7 +71,7 @@ export class MovieModel {
       foundMovie.rate = rate
     }
   }
-  static delete = async (id) => {
+  static delete = async ({ id }) => {
     const foundMovie = movies.find(movie => movie.id === id)
     if (!foundMovie) { return false }
     const movieIndex = movies.indexOf(foundMovie)
