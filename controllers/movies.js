@@ -7,102 +7,76 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var _a;
 import { MovieModel } from '../models/movie.js';
 export class MovieController {
-    static getAll(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const movies = yield MovieModel.getAll();
-                res.status(200).json(movies);
-            }
-            catch (error) {
-                res.status(500).json({
-                    message: 'Error interno del servidor',
-                });
-            }
-        });
-    }
-    static getById(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const id = req.params.id;
-            try {
-                const movie = yield MovieModel.getByID(id);
-                if (!movie) {
-                    res.status(404).json({ message: 'Película no encontrada' });
-                }
-                else {
-                    res.status(200).json(movie);
-                }
-            }
-            catch (error) {
-                res.status(500).json({
-                    message: 'Error interno del servidor',
-                });
-            }
-        });
-    }
-    static getByQuery(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const movies = yield MovieModel.getByGender({ request: req });
-                res.status(200).json(movies);
-            }
-            catch (error) {
-                res.status(500).json({
-                    message: `Error al buscar la película: ${error.message}`,
-                });
-            }
-        });
-    }
-    static create(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const newMovie = yield MovieModel.create({ request: req });
-                res.status(201).json(newMovie);
-            }
-            catch (error) {
-                res.status(400).json({
-                    message: 'Error al crear la película',
-                });
-            }
-        });
-    }
-    static update(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const id = req.params.id;
-            try {
-                const updatedMovie = yield MovieModel.update({ id, request: req });
-                if (!updatedMovie) {
-                    res.status(404).json({ message: 'Película no encontrada' });
-                }
-                else {
-                    res.status(202).json(updatedMovie);
-                }
-            }
-            catch (error) {
-                res.status(500).json({
-                    message: 'Error al actualizar la película',
-                });
-            }
-        });
-    }
-    static delete(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const id = req.params.id;
-            try {
-                const result = yield MovieModel.delete(id);
-                if (!result) {
-                    res.status(404).json({ message: 'Película no encontrada' });
-                }
-                else {
-                    res.status(202).json(result);
-                }
-            }
-            catch (error) {
-                res.status(500).json({
-                    message: 'Error al eliminar la película',
-                });
-            }
-        });
-    }
 }
+_a = MovieController;
+MovieController.getAll = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const movies = yield MovieModel.getAll();
+    try {
+        let Movies = movies;
+        res.json(Movies);
+    }
+    catch (_b) {
+        res.status(500).json({
+            message: "Error interno del servidor"
+        });
+    }
+});
+MovieController.getById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const foundMovie = yield MovieModel.getByID({ id });
+    try {
+        const movie = yield foundMovie;
+        res.status(302).json(movie);
+    }
+    catch (error) {
+        console.error('Error finding movie:', error);
+        res.status(400).send('id no valida');
+    }
+});
+MovieController.getByQuery = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const movie = yield MovieModel.getByGender({ request: req });
+        res.status(302).json(movie);
+    }
+    catch (error) {
+        console.error('Error finding movie:', error);
+        res.status(400).send(`Error al buscar la pelicula: ${error.message}`);
+    }
+});
+MovieController.create = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const NewMovie = MovieModel.create({ request: req });
+    try {
+        const movie = yield NewMovie;
+        res.status(201).json(movie);
+    }
+    catch (error) {
+        console.error('Error creating movie:', error);
+        res.status(400).send('Error al crear la pelicula');
+    }
+});
+MovieController.update = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const ModifMovie = yield MovieModel.update({ id, request: req });
+    try {
+        const movie = ModifMovie;
+        res.status(202).json(movie);
+    }
+    catch (error) {
+        console.error('Error updating movie:', error);
+        res.status(400).send('Error al actualizar la pelicula');
+    }
+});
+MovieController.delete = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const resultado = yield MovieModel.delete({ id });
+    try {
+        res.status(202).json(resultado);
+    }
+    catch (error) {
+        console.error('Error deleting movie:', error);
+        res.status(400).send('Error al eliminar la pelicula');
+    }
+});

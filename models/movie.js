@@ -10,16 +10,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 var _a;
 import { createRequire } from 'node:module';
 import { randomUUID } from 'node:crypto';
-import { ValidateMovie, validateParcialMovie } from "../schemas/schemaMovie.js";
+import { ValidateMovie, validateParcialMovie } from '../schemas/schemaMovie.js';
 const Require = createRequire(import.meta.url);
 const movies = Require('../pokemon/movies.json');
 export class MovieModel {
 }
 _a = MovieModel;
 MovieModel.getAll = () => __awaiter(void 0, void 0, void 0, function* () { return movies; });
-MovieModel.getByGender = (request) => __awaiter(void 0, void 0, void 0, function* () {
-    const querys = JSON.parse(JSON.stringify(request.query));
-    const { genre, title, director, year, rating, poster } = querys;
+MovieModel.getByGender = (_b) => __awaiter(void 0, [_b], void 0, function* ({ request }) {
+    const { title, year, director, poster, genre, rate } = request.query;
     let filteredMovies = movies;
     if (genre) {
         filteredMovies = filteredMovies.filter((movie) => movie.genre.some(g => g.toLowerCase() === genre.toLowerCase()));
@@ -31,38 +30,43 @@ MovieModel.getByGender = (request) => __awaiter(void 0, void 0, void 0, function
         filteredMovies = filteredMovies.filter((movie) => movie.director.toLowerCase() === director.toLowerCase());
     }
     if (year) {
-        filteredMovies = filteredMovies.filter((movie) => movie.year === Number(year));
+        filteredMovies = filteredMovies.filter((movie) => movie.year === year);
     }
-    if (rating) {
-        filteredMovies = filteredMovies.filter((movie) => movie.rate === Number(rating));
+    if (rate) {
+        filteredMovies = filteredMovies.filter((movie) => movie.rate === rate);
     }
     if (poster) {
         filteredMovies = filteredMovies.filter((movie) => movie.poster === poster);
     }
     return filteredMovies;
 });
-MovieModel.getByID = (id) => __awaiter(void 0, void 0, void 0, function* () {
+MovieModel.getByID = (_c) => __awaiter(void 0, [_c], void 0, function* ({ id }) {
     const foundMovie = movies.find((movie) => movie.id === id);
-    return foundMovie ? foundMovie : false;
-});
-MovieModel.create = (request) => __awaiter(void 0, void 0, void 0, function* () {
-    const data = request.body;
-    const isValid = ValidateMovie(data);
-    if (!isValid) {
+    if (Object.keys(foundMovie).length === 0) {
         return false;
     }
-    const newMovie = Object.assign({ id: randomUUID() }, data);
-    movies.push(newMovie);
-    return newMovie;
+    else {
+        return foundMovie;
+    }
 });
-MovieModel.update = (id, request) => __awaiter(void 0, void 0, void 0, function* () {
+MovieModel.create = (_d) => __awaiter(void 0, [_d], void 0, function* ({ request }) {
+    const data = request.body;
+    const Valider = ValidateMovie(data);
+    if (!Valider) {
+        return false;
+    }
+    const NewMovie = Object.assign({ id: randomUUID() }, data);
+    movies.push(NewMovie);
+    return NewMovie;
+});
+MovieModel.update = (_e) => __awaiter(void 0, [_e], void 0, function* ({ id, request }) {
     const { title, year, director, genre, rate } = request.body;
     const foundMovie = movies.find((movie) => movie.id === id);
     if (!foundMovie) {
         return false;
     }
-    const isValid = validateParcialMovie(request.body);
-    if (!isValid.success) {
+    const Valider = validateParcialMovie(request.body);
+    if (!Valider.success) {
         return false;
     }
     if (title) {
@@ -80,9 +84,8 @@ MovieModel.update = (id, request) => __awaiter(void 0, void 0, void 0, function*
     if (rate) {
         foundMovie.rate = rate;
     }
-    return foundMovie;
 });
-MovieModel.delete = (id) => __awaiter(void 0, void 0, void 0, function* () {
+MovieModel.delete = (_f) => __awaiter(void 0, [_f], void 0, function* ({ id }) {
     const foundMovie = movies.find((movie) => movie.id === id);
     if (!foundMovie) {
         return false;
