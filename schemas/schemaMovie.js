@@ -1,6 +1,6 @@
 import z from 'zod';
 const movieSchema = z.object({
-    name: z.string({
+    title: z.string({
         invalid_type_error: 'Dato ingresado incorrecto'
     }),
     genre: z.array(z.enum(['Action', 'Drama', 'Sci-Fi', 'Crime', 'Adventure', 'Romance', 'Animation', 'Biography', 'Fantasy']), {

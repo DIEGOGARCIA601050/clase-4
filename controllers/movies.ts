@@ -1,66 +1,87 @@
-import { MovieModel } from '../models/movie.js'
+import { Request, Response } from 'express';
+import { MovieModel } from '../models/movie.js';
+
+type DittoID = `${string}-${string}-${string}-${string}-${string}`;
 
 export class MovieController {
-  static getAll = async (req, res) => {
-    const movies = await MovieModel.getAll();
+  static async getAll(req: Request, res: Response): Promise<void> {
     try {
-      let Movies = movies
-      res.json(Movies)
-    } catch {
+      const movies = await MovieModel.getAll();
+      res.status(200).json(movies);
+    } catch (error) {
       res.status(500).json({
-        message: "Error interno del servidor"
-      })
+        message: 'Error interno del servidor',
+      });
     }
   }
-  static getById = async (req, res) => {
-    const { id } = req.params
-      const foundMovie = await MovieModel.getByID({ id })
+
+  static async getById(req: Request, res: Response): Promise<void> {
+    const id: DittoID = req.params.id as DittoID;
     try {
-      const movie = await foundMovie;
-      res.status(302).json(movie);
+      const movie = await MovieModel.getByID({id});
+      if (!movie) {
+        res.status(404).json({ message: 'Película no encontrada' });
+      } else {
+        res.status(200).json(movie);
+      }
     } catch (error) {
-      console.error('Error finding movie:', error);
-      res.status(400).send('id no valida');
+      res.status(500).json({
+        message: 'Error interno del servidor',
+      });
     }
   }
-  static getByQuery = async (req, res) => {
+
+  static async getByQuery(req: Request, res: Response): Promise<void> {
     try {
-      const movie = await MovieModel.getByGender({ request: req });
-      res.status(302).json(movie);
-    } catch (error) {
-      console.error('Error finding movie:', error);
-      res.status(400).send(`Error al buscar la pelicula: ${error.message}`);
+      const movies = await MovieModel.getByGender({ request: req });
+      res.status(200).json(movies);
+    } catch (error: any) {
+      res.status(500).json({
+        message: `Error al buscar la película: ${error.message}`,
+      });
     }
   }
-  static create = async (req, res) => {
-    const NewMovie = MovieModel.create({ request: req })
+
+  static async create(req: Request | any, res: Response): Promise<void> {
     try {
-      const movie = await NewMovie;
-      res.status(201).json(movie);
+      const newMovie = await MovieModel.create({ request: req });
+      res.status(201).json(newMovie);
     } catch (error) {
-      console.error('Error creating movie:', error);
-      res.status(400).send('Error al crear la pelicula');
+      res.status(400).json({
+        message: 'Error al crear la película',
+      });
     }
   }
-  static update = async (req, res) => {
-    const { id } = req.params
-    const ModifMovie = await MovieModel.update({ id, request: req })
+
+  static async update(req: Request, res: Response): Promise<void> {
+    const id: DittoID = req.params.id as DittoID;
     try {
-      const movie =  ModifMovie;
-      res.status(202).json(movie);
+      const updatedMovie = await MovieModel.update({ id, request: req });
+      if (!updatedMovie) {
+        res.status(404).json({ message: 'Película no encontrada' });
+      } else {
+        res.status(202).json(updatedMovie);
+      }
     } catch (error) {
-      console.error('Error updating movie:', error);
-      res.status(400).send('Error al actualizar la pelicula');
+      res.status(500).json({
+        message: 'Error al actualizar la película',
+      });
     }
   }
-  static delete = async (req, res) => {
-    const { id } = req.params
-    const resultado = await MovieModel.delete({ id })
+
+  static async delete(req: Request, res: Response): Promise<void> {
+    const id: DittoID = req.params.id as DittoID;
     try {
-      res.status(202).json(resultado);
+      const result = await MovieModel.delete({id});
+      if (!result) {
+        res.status(404).json({ message: 'Película no encontrada' });
+      } else {
+        res.status(202).json(result);
+      }
     } catch (error) {
-      console.error('Error deleting movie:', error);
-      res.status(400).send('Error al eliminar la pelicula');
+      res.status(500).json({
+        message: 'Error al eliminar la película',
+      });
     }
   }
 }

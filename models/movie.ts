@@ -15,10 +15,21 @@ type Ditto = {
     poster: string
     timestamp: number
 }
+type Object = {
+    id?: DittoID
+    title?: string
+    year: number
+    director?: string
+    genre?: string[]
+    rate: number
+    poster?: string
+    timestamp?: number
+    duration:number
+  }
 
 export class MovieModel {
   static getAll = async () => movies
-  static getByGender = async ({ request }:{request:any}) => {
+  static getByGender = async ({ request }:{request:any}):Promise<Ditto[]> => {
     const { title, year, director, poster, genre, rate } = request.query;
 
     let filteredMovies = movies;
@@ -45,11 +56,11 @@ export class MovieModel {
     return filteredMovies;
   }
 
-  static getByID = async ({ id }:{id:DittoID}) => {
+  static getByID = async ({ id }:{id:DittoID}):Promise<boolean|Ditto> => {
     const foundMovie = movies.find((movie:Ditto)=> movie.id === id)
       if (Object.keys(foundMovie).length === 0) { return false } else { return foundMovie }
     }
-  static create = async ({ request }:{request:Request}) => {
+  static create = async ({ request }:{request:Request}):Promise<Object|boolean> => {
     const data = request.body;
     const Valider = ValidateMovie(data)
     if(!Valider) {
@@ -84,7 +95,7 @@ export class MovieModel {
       foundMovie.rate = rate
     }
   }
-  static delete = async ({ id }:{id:DittoID}) => {
+  static delete = async ({ id }:{id:DittoID}):Promise<boolean> => {
     const foundMovie = movies.find((movie:Ditto)=> movie.id === id)
     if (!foundMovie) { return false }
     const movieIndex = movies.indexOf(foundMovie)

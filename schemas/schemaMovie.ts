@@ -1,13 +1,18 @@
 import z from 'zod'
+type DittoID = `${string}-${string}-${string}-${string}-${string}`;
 type Object = {
-    name:string
-    genre: string[]
-    duration:number
-    rate:number
-    watched:boolean
+  id?: DittoID
+  title?: string
+  year: number
+  director: string
+  genre: string[]
+  rate: number
+  poster?: string
+  timestamp?: number
+  duration:number
 }
 const movieSchema = z.object({
-  name: z.string({
+  title: z.string({
     invalid_type_error: 'Dato ingresado incorrecto'
   }),
   genre: z.array(
@@ -25,7 +30,7 @@ const movieSchema = z.object({
   }).default(false)
 })
 
-export function ValidateMovie (object:ReadableStream|null) {
+export function ValidateMovie (object:Object) {
   const validate = movieSchema.safeParse(object)
   return validate
 }
