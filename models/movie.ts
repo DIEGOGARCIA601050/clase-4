@@ -4,7 +4,7 @@ import { randomUUID } from 'node:crypto'
 import { ValidateMovie, validateParcialMovie } from "../schemas/schemaMovie.js";
 
 const Require = createRequire(import.meta.url)
-const movies = Require('../data/movies.json');
+const movies = Require('../pokemon/movies.json');
 
 type DittoID = `${string}-${string}-${string}-${string}-${string}`
 type Ditto = {

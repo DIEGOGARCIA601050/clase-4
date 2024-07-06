@@ -12,7 +12,7 @@ import { createRequire } from 'node:module';
 import { randomUUID } from 'node:crypto';
 import { ValidateMovie, validateParcialMovie } from "../schemas/schemaMovie.js";
 const Require = createRequire(import.meta.url);
-const movies = Require('../data/movies.json');
+const movies = Require('../pokemon/movies.json');
 export class MovieModel {
 }
 _a = MovieModel;
