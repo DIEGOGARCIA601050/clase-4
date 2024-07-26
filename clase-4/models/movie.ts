@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request } from "express";
 import { createRequire } from 'node:module'
 import { randomUUID } from 'node:crypto'
 import { ValidateMovie, validateParcialMovie } from '../schemas/schemaMovie.js'
@@ -15,17 +15,6 @@ type Ditto = {
     poster: string
     timestamp: number
 }
-type Object = {
-    id?: DittoID
-    title?: string
-    year: number
-    director?: string
-    genre?: string[]
-    rate: number
-    poster?: string
-    timestamp?: number
-    duration:number
-  }
 
 export class MovieModel {
   static getAll = async () => movies
