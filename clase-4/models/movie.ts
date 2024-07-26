@@ -11,7 +11,7 @@ type Ditto = {
     year: number
     director: string
     genre: string[]
-    rate: number
+    rate: 1|2|3|4|5|6|7|8|9|10
     poster: string
     timestamp: number
 }
