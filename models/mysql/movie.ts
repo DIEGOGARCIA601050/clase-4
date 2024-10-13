@@ -3,7 +3,7 @@ import mysql from 'mysql';
 const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: '44A1WtmffXKwZw',
+  password: 'MeJodiLaDB',
   database: 'files',
 });
 
@@ -14,5 +14,6 @@ connection.connect((err) => {
   }
   console.log('Conexión exitosa a la base de datos');
 });
-
-export default connection;
+let MovieModel = connection
+export MovieModel
+export default MovieModel;
